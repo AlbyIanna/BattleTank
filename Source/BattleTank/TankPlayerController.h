@@ -7,6 +7,8 @@
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
+#define OUT
+
 /**
  * 
  */
@@ -19,5 +21,9 @@ public:
 	ATank* GetControlledTank() const;
 
 	virtual void BeginPlay() override;
-	
+	virtual void Tick(float DeltaTime) override;
+
+private:
+	virtual void AimTowardCrosshair();
+	virtual bool GetSightRayHitLocation(OUT FVector & OutHitLocation) const;
 };
