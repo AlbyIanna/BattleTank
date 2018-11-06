@@ -1,6 +1,7 @@
 /// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
+#include "Tank.h"
 #include "Engine/World.h"
 
 void ATankPlayerController::Tick(float DeltaTime) {
@@ -15,7 +16,7 @@ void ATankPlayerController::AimTowardCrosshair()
 	}
 
 	FVector HitLocation;
-	if (GetSightRayHitLocation(HitLocation)) {
+	if (GetSightRayHitLocation(OUT HitLocation)) {
 		GetControlledTank()->AimAt(HitLocation);
 	}
 }
@@ -47,13 +48,14 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, OUT 
 	FHitResult HitResult;
 	auto StartLocation = PlayerCameraManager->GetCameraLocation();
 	auto EndLocation = StartLocation + LookDirection * LineTraceRange;
-	GetWorld()->LineTraceSingleByChannel(
+	if (
+		GetWorld()->LineTraceSingleByChannel(
 		OUT HitResult,
 		StartLocation,
 		EndLocation,
 		ECollisionChannel::ECC_Visibility
-	);
-	if (HitResult.IsValidBlockingHit()) {
+		)
+	) {
 		HitLocation = HitResult.Location;
 		return true;
 	}

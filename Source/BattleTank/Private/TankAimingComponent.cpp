@@ -3,6 +3,7 @@
 #include "GameFramework/Actor.h"
 #include "Public/TankBarrel.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
 
 
 // Sets default values for this component's properties
@@ -60,6 +61,12 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	)) {
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f: AimDirection: %s"), Time, *AimDirection.ToString())
+	}
+	else {
+		auto Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f: No solution found"), Time)
 	}
 }
 
