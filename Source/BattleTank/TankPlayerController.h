@@ -22,11 +22,11 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 private:
 	ATank* GetControlledTank() const;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float CrossHairLocationX = .5f;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float CrossHairLocationY = .33333f;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float LineTraceRange = 1000000.f;
 
 	virtual void BeginPlay() override;
