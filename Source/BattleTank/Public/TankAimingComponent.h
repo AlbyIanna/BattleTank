@@ -34,8 +34,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firing")
 	void Fire(); // _FIRE_
 
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void AimAt(FVector HitLocation);
 
 	FVector GetAiminingHitLocation();
@@ -43,14 +41,17 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringStatus FiringState = EFiringStatus::Aiming;
+	EFiringStatus FiringState = EFiringStatus::Reloading;
 	
 private:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 	FVector AimingHitLocation = FVector();
+	FVector AimDirection = FVector();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float LaunchSpeed = 5000; // TODO: Find sensible value
@@ -63,5 +64,6 @@ private:
 
 	double LastFireTime = 0;
 
-	void MoveBarrelTowards(FVector AimDirection);
+	void MoveBarrelTowards(FVector NewAimDirection);
+	bool isBarrelMoving();
 };
