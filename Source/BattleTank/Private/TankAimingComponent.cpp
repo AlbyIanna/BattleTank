@@ -39,19 +39,15 @@ void UTankAimingComponent::BeginPlay()
 // Called every frame
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Last: %d, reload: %f"), (FPlatformTime::Seconds() - LastFireTime), ReloadTimeInSeconds)
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds ) {
 		FiringState = EFiringStatus::Reloading;
-		UE_LOG(LogTemp, Warning, TEXT("Reloading"))
 	}
 	else if (isBarrelMoving()) {
 		FiringState = EFiringStatus::Aiming;
-		UE_LOG(LogTemp, Warning, TEXT("Aiming"))
 	}
 	else {
 		FiringState = EFiringStatus::Locked;
-		UE_LOG(LogTemp, Warning, TEXT("Locked"))
 	}
 }
 

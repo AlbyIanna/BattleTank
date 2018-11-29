@@ -7,11 +7,18 @@ UTankTrack::UTankTrack() {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
+void UTankTrack::BeginPlay()
+{
+	Super::BeginPlay();
+	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
+}
+
+
 void UTankTrack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
 {
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	// calculate the slippage speed
 	auto SlippageSpeed = cos(FVector::DotProduct(GetRightVector(), GetComponentVelocity()));
-	UE_LOG(LogTemp, Warning, TEXT("Slippage %f"), SlippageSpeed)
 
 	// workout the required acceleration this frame to correct
 	auto CorretionAcceleration = -SlippageSpeed / DeltaTime * GetRightVector();
@@ -26,4 +33,9 @@ void UTankTrack::SetThrottle(float Throttle) {
 	auto ForceLocation = GetComponentLocation();
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
+}
+
+void UTankTrack::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Working!"))
 }
