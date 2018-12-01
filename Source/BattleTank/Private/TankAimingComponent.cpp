@@ -70,11 +70,9 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 	)) {
 		AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
-		auto Time = GetWorld()->GetTimeSeconds();
 		AimingHitLocation = HitLocation;
 	}
 	else {
-		auto Time = GetWorld()->GetTimeSeconds();
 		AimingHitLocation = FVector();
 	}
 }
@@ -85,6 +83,9 @@ void UTankAimingComponent::MoveBarrelTowards(FVector NewAimDirection)
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = NewAimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
+	if (DeltaRotator.Yaw > 180) {
+		DeltaRotator.Yaw = DeltaRotator.Yaw - 360;
+	}
 
 	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->Rotate(DeltaRotator.Yaw);
