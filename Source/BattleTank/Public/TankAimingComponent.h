@@ -38,6 +38,7 @@ public:
 
 	FVector GetAiminingHitLocation();
 
+	EFiringStatus getFiringState() const;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")

@@ -28,6 +28,11 @@ FVector UTankAimingComponent::GetAiminingHitLocation()
 	return AimingHitLocation;
 }
 
+EFiringStatus UTankAimingComponent::getFiringState() const
+{
+	return FiringState;
+}
+
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
 {
