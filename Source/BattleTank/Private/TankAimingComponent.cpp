@@ -13,7 +13,7 @@ UTankAimingComponent::UTankAimingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
+	currentAmmo = maxAmmo;
 	// ...
 }
 
@@ -33,6 +33,11 @@ EFiringStatus UTankAimingComponent::getFiringState() const
 	return FiringState;
 }
 
+int UTankAimingComponent::getCurrentAmmo() const
+{
+	return currentAmmo;
+}
+
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
 {
@@ -45,7 +50,10 @@ void UTankAimingComponent::BeginPlay()
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds ) {
+	if (currentAmmo <= 0) {
+		FiringState = EFiringStatus::OutOfAmmo;
+	}
+	else if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds ) {
 		FiringState = EFiringStatus::Reloading;
 	}
 	else if (isBarrelMoving()) {
@@ -88,7 +96,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector NewAimDirection)
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = NewAimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
-	if (FMath::Abs(DeltaRotator.Yaw) > 180) {
+	if (FMath::Abs(DeltaRotator.Yaw) > 180) { // Always yaw the shortest way
 		DeltaRotator.Yaw = -DeltaRotator.Yaw;
 	}
 
@@ -102,11 +110,16 @@ bool UTankAimingComponent::isBarrelMoving()
 	return !AimDirection.Equals(Barrel->GetForwardVector(), .01);
 }
 
+void UTankAimingComponent::refillAmmo()
+{
+	currentAmmo = maxAmmo;
+}
+
 void UTankAimingComponent::Fire()
 {
 	//FVector AimingHitLocation = TankAimingComponent->GetAiminingHitLocation();
 
-	if (FiringState == EFiringStatus::Reloading || !ensure(Barrel) || !ensure(ProjectileBlueprint)) { return; }
+	if (FiringState == EFiringStatus::Reloading || FiringState == EFiringStatus::OutOfAmmo || !ensure(Barrel) || !ensure(ProjectileBlueprint)) { return; }
 	
 	auto Projectile = GetWorld()->SpawnActor<AProjectile>(
 		ProjectileBlueprint,
@@ -115,4 +128,5 @@ void UTankAimingComponent::Fire()
 		);
 	Projectile->LaunchProjectile(LaunchSpeed);
 	LastFireTime = FPlatformTime::Seconds();
+	currentAmmo--;
 }
