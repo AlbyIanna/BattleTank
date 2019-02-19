@@ -18,13 +18,23 @@ public:
 	// Sets default values for this actor's properties
 	AProjectile();
 
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void Initialize(UStaticMeshComponent * CollisionMesh, UParticleSystemComponent * LaunchBlast);
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
-	UProjectileMovementComponent* ProjectileMovement = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UStaticMeshComponent * CollisionMesh = nullptr;
 
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UParticleSystemComponent * LaunchBlast = nullptr;
+
+	UProjectileMovementComponent* ProjectileMovement = nullptr;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

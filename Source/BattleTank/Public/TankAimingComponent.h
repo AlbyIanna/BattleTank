@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "TankAimingComponent.generated.h"
 
-
 UENUM()
 enum class EFiringStatus : uint8
 {
@@ -42,7 +41,7 @@ public:
 	EFiringStatus getFiringState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Firing")
-	int getCurrentAmmo() const;
+	int32 getCurrentAmmo() const;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
@@ -63,15 +62,15 @@ private:
 	TSubclassOf<AProjectile> ProjectileBlueprint; // Alternative: SubcalssOf
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float LaunchSpeed = 5000; // TODO: Find sensible value
+	float LaunchSpeed = 5000;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float ReloadTimeInSeconds = 3;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int maxAmmo = 3;
+	int32 maxAmmo = 3;
 
-	int currentAmmo = 3;
+	int32 currentAmmo;
 	double LastFireTime = 0;
 
 	void MoveBarrelTowards(FVector NewAimDirection);

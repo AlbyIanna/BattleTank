@@ -13,7 +13,6 @@ UTankAimingComponent::UTankAimingComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	currentAmmo = maxAmmo;
 	// ...
 }
 
@@ -21,6 +20,7 @@ void UTankAimingComponent::Initialize(UTankBarrel * BarrelToSet, UTankTurret* Tu
 {
 	Turret = TurretToSet;
 	Barrel = BarrelToSet;
+	currentAmmo = maxAmmo;
 }
 
 FVector UTankAimingComponent::GetAiminingHitLocation()
@@ -33,7 +33,7 @@ EFiringStatus UTankAimingComponent::getFiringState() const
 	return FiringState;
 }
 
-int UTankAimingComponent::getCurrentAmmo() const
+int32 UTankAimingComponent::getCurrentAmmo() const
 {
 	return currentAmmo;
 }
