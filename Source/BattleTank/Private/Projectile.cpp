@@ -1,11 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Projectile.h"
-#include "Engine/World.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -39,13 +40,6 @@ void AProjectile::BeginPlay()
 	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
-void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
-{
-	LaunchBlast->Deactivate();
-	ImpactBlast->Activate();
-	ExplosionForce->FireImpulse();
-}
-
 void AProjectile::LaunchProjectile(float Speed)
 {
 	auto Time = GetWorld()->GetTimeSeconds();
@@ -53,5 +47,20 @@ void AProjectile::LaunchProjectile(float Speed)
 	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 	ProjectileMovement->Activate();
 
+}
+
+void AProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
+{
+	LaunchBlast->Deactivate();
+	ImpactBlast->Activate();
+	ExplosionForce->FireImpulse();
+	SetRootComponent(ImpactBlast);
+	CollisionMesh->DestroyComponent();
+	FTimerHandle Timer;
+	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnTimerExpire, DestroyDelay, false);
+}
+
+void AProjectile::OnTimerExpire() {
+	Destroy();
 }
 
