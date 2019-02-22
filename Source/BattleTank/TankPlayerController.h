@@ -34,8 +34,13 @@ private:
 
 	UTankAimingComponent * AimingComponent = nullptr;
 
+
+	UFUNCTION()
+	void OnTankDeath();
+	
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void SetPawn(APawn * InPawn) override;
 
 	virtual void AimTowardCrosshair();
 	virtual bool GetSightRayHitLocation(OUT FVector & OutHitLocation) const;

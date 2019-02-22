@@ -16,7 +16,7 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AC
 	CurrentHealth -= DamageToApply;
 	UE_LOG(LogTemp, Warning, TEXT("%s: DamageToApply = %i"), *GetName(), DamageToApply)
 	if (CurrentHealth <= 0) {
-		UE_LOG(LogTemp, Warning, TEXT("%s IS DEAD! :("), *GetName())
+		OnDeath.Broadcast();
 	}
 	return DamageToApply;
 }
