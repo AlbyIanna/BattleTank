@@ -41,5 +41,7 @@ void ATankAIController::Tick(float DeltaTime)
 void ATankAIController::OnTankDeath()
 { 
 	UE_LOG(LogTemp, Warning, TEXT("Enemy tank %s IS DEAD! :D"), *GetPawn()->GetName())
+
+	GetPawn()->DetachFromControllerPendingDestroy();
 }
 

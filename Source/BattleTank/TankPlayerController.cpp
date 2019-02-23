@@ -5,6 +5,14 @@
 #include "TankAimingComponent.h"
 #include "Tank.h"
 
+
+void ATankPlayerController::BeginPlay() {
+	Super::BeginPlay();
+	AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) { return; }
+	FoundAimingComponent(AimingComponent);
+}
+
 void ATankPlayerController::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	AimTowardCrosshair();
@@ -78,12 +86,6 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, OUT 
 void ATankPlayerController::OnTankDeath()
 {
 	UE_LOG(LogTemp, Warning, TEXT("my tank is dead! D:"))
-}
 
-void ATankPlayerController::BeginPlay() {
-	Super::BeginPlay();
-	AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
-	if (!ensure(AimingComponent)) { return; }
-	FoundAimingComponent(AimingComponent);
+	StartSpectatingOnly();
 }
-
